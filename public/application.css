@@ -19,6 +19,10 @@ body {
   font-size: 1em;
 }
 
+.label-lg {
+  font-size: 1em;
+}
+
 .cards {
   list-style-type: none;
   margin: 0;
@@ -45,4 +49,6 @@ body {
   vertical-align: bottom;
 }
 
-.
+.labelled {
+  line-height: 250%;
+}

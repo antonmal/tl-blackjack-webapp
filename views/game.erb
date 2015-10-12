@@ -1,5 +1,5 @@
 <% if move == :dealer %>
-  <meta http-equiv="refresh" content="2, url=/dealer/hit">
+  <meta http-equiv="refresh" content="1, url=/dealer/hit">
 <% end %>
 
 
@@ -15,8 +15,8 @@
         <% if move != :player %>
           <span class="label label-<%=
             case 
-            when dealer_points == 21 then 'success'
-            when dealer_points > 21 then 'danger'
+            when dealer_blackjack?  then 'success'
+            when dealer_busted?     then 'danger'
             else 'warning'
             end
           %>"><%=dealer_points%></span>
@@ -24,11 +24,23 @@
       </h1>
     </div>
     <div class="panel-body">
-      <ul class="cards">
-        <% session[:dealer_hand].each do |card| %>
-        <li><img src="<%=image(card)%>"></li>
-        <% end %>
-      </ul>      
+      <% if move == :player %>
+        <ul class="cards">
+          <% session[:dealer_hand].each_with_index do |card, i| %>
+            <% if i == 0 %>
+              <li><img src="<%=image(card)%>"></li>
+            <% else %>
+              <li><img src="/images/cards/cover.jpg"></li>
+            <% end %>  
+          <% end %>
+        </ul>
+      <% else %>
+        <ul class="cards">
+          <% session[:dealer_hand].each do |card| %>
+          <li><img src="<%=image(card)%>"></li>
+          <% end %>
+        </ul>
+      <% end %>
     </div>
   </div>
 </div>
@@ -38,13 +50,22 @@
 
 <!-- Dealer buttons animation -->
 <% if move == :dealer %>
-  <div style="padding-bottom: 20px;">
-    <button class="btn btn-success btn-lg" disabled="disabled">
-      <i class="fa fa-refresh fa-spin"></i> Hit
-    </button>&nbsp;
-    <button class="btn btn-warning btn-lg" disabled="disabled">
-      <i class="fa fa-hand-stop-o fa-lg"></i> Stay
-    </button>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1 class="panel-title grand">
+      Dealer is making his moves...
+      </h1>
+    </div>
+    <div class="panel-body">
+      <div style="margin-top: 50px;">
+        <button class="btn btn-success btn-lg" disabled="disabled">
+          <i class="fa fa-refresh fa-spin"></i> Hit
+        </button>&nbsp;
+        <button class="btn btn-warning btn-lg" disabled="disabled">
+          <i class="fa fa-hand-stop-o fa-lg"></i> Stay
+        </button>
+      </div>
+    </div>
   </div>
 <% end %>
 
@@ -55,7 +76,9 @@
       <h1 class="panel-title grand"><%=result_heading%></h1>
     </div>
     <div class="panel-body">
-      <%=result_body%>
+      <p><%=result_body%></p>
+      <div class="labelled">Your bet was: <%=tagged("$#{session[:bet]}")%></div>
+      <div class="labelled"><%=round_result%></div>
     </div>
   </div>
 <% end %>
@@ -101,8 +124,10 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h1 class="panel-title grand">
-        Bankroll: <span class="label label-default">$<%=session[:bankroll]%></span>&nbsp; &nbsp; 
-        Bet: <span class="label label-default">$<%=session[:bet]%></span>
+        Bankroll: <span class="label label-default">$<%=session[:bankroll]%></span>&nbsp; &nbsp;
+        <% unless move == :end %> 
+          Bet: <span class="label label-default">$<%=session[:bet]%></span>
+        <% end %>
       </h1>
     </div>
     <div class="panel-body">
