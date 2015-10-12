@@ -17,7 +17,7 @@ get '/' do
 end
 
 post '/start' do
-  unless params[:player_name] && params[:player_name].length > 0
+  unless params[:player_name] && !params[:player_name].empty?
     redirect '/?error=empty_name'
   end
   session[:player_name] = params[:player_name].capitalize

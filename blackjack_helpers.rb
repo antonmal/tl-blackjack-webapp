@@ -14,6 +14,10 @@ helpers do
     rank_points.merge!({ "J" => 10, "Q" => 10, "K" => 10, "A" => 11 })
   end
 
+  def get_card_points(card)
+    get_rank_points[card[0..-2]]
+  end
+
   def get_suits
     { "♠" => "spades", "♥" => "hearts", "♦" => "diamonds", "♣" => "clubs" }
   end
@@ -24,16 +28,14 @@ helpers do
 
   def get_points(hand)
     # Calculate the sum of all card values, aces as 11s
-    points = hand.map { |card| get_card_points(card) }.inject(:+)
+    points = hand.map {|card| get_card_points(card)}.inject(:+)
 
     # If the sum is greater than 21 (busted), re-calculate one or more aces as 1s
-    if points > 21
-      aces = hand.count { |card| card[0..-2] == "A" }
-      aces.times do
-        points -= 10
-        break if points <= 21
-      end
+    aces = hand.count {|card| card[0..-2] == "A"}.times do
+      break if points <= 21
+      points -= 10
     end
+
     points
   end
 
@@ -45,8 +47,20 @@ helpers do
     get_points(session[:dealer_hand])
   end
 
-  def get_card_points(card)
-    get_rank_points[card[0..-2]]
+  def player_blackjack?
+    player_points == 21 && session[:player_hand].size == 2
+  end
+
+  def player_busted?
+    player_points > 21
+  end
+
+  def dealer_blackjack?
+    dealer_points == 21 && session[:dealer_hand].size == 2
+  end
+
+  def dealer_busted?
+    dealer_points > 21
   end
 
   def build_deck
@@ -64,22 +78,6 @@ helpers do
       session[:deck] = build_deck
     end
     session[:deck].pop
-  end
-
-  def player_blackjack?
-    player_points == 21 && session[:player_hand].size == 2
-  end
-
-  def player_busted?
-    player_points > 21
-  end
-
-  def dealer_blackjack?
-    dealer_points == 21 && session[:dealer_hand].size == 2
-  end
-
-  def dealer_busted?
-    dealer_points > 21
   end
 
   def result
@@ -110,6 +108,10 @@ helpers do
     end
   end
 
+  def player
+    session[:player_name]
+  end
+
   def result_heading
     case won?
     when 'tie'  then "It's a push."
@@ -118,19 +120,15 @@ helpers do
     end
   end
 
-  def player
-    session[:player_name]
-  end
-
   def result_body
     case result
     when 'tie busted'       then "Both busted"
     when 'tie blackjack'    then "Both have blackjack."
     when 'tie points'       then "Both have equal number of points."
-    when 'player won'       then "#{player} has more points."
-    when 'player blackjack' then "#{player} has blackjack."
+    when 'player won'       then "You have more points."
+    when 'player blackjack' then "You got blackjack."
     when 'dealer busted'    then "Dealer busted."
-    when 'player busted'    then "#{player} busted."
+    when 'player busted'    then "You busted."
     when 'dealer blackjack' then "Dealer has blackjack."
     when 'dealer won'       then "Dealer has more points"
     end
@@ -165,9 +163,9 @@ helpers do
 
   def round_result
     case won?
-    when 'tie'                then "You bet goes back to you."
-    when 'blackjack', 'won'   then "You won " + tagged("$#{session[:result]}", 'success') + "<br />and got your bet back."
-    else "You lost " + tagged("$#{-session[:result]}", 'danger')
+    when 'tie'                then "You got your bet back."
+    when 'blackjack', 'won'   then "You won:  " + tagged("$#{session[:result] + session[:bet]}", 'success')
+    else "Your lost:  " + tagged("$#{-session[:result]}", 'danger')
     end
   end
 

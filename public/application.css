@@ -45,10 +45,10 @@ body {
   min-height: inherit;
 }
 
-.vbottom {
-  vertical-align: bottom;
-}
-
 .labelled {
   line-height: 250%;
+}
+
+.result {
+  font-size: 1.5em;
 }
