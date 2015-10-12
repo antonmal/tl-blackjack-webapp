@@ -1,0 +1,150 @@
+<% if move == :dealer %>
+  <meta http-equiv="refresh" content="2, url=/dealer/hit">
+<% end %>
+
+
+<!-- Start dealer part of screen -->
+<div class="row">
+
+<!-- Dealer cards -->
+<div class="col col-md-8">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1 class="panel-title grand">
+        Dealer's hand:
+        <% if move != :player %>
+          <span class="label label-<%=
+            case 
+            when dealer_points == 21 then 'success'
+            when dealer_points > 21 then 'danger'
+            else 'warning'
+            end
+          %>"><%=dealer_points%></span>
+        <% end %>
+      </h1>
+    </div>
+    <div class="panel-body">
+      <ul class="cards">
+        <% session[:dealer_hand].each do |card| %>
+        <li><img src="<%=image(card)%>"></li>
+        <% end %>
+      </ul>      
+    </div>
+  </div>
+</div>
+
+<!-- Dealer info column -->
+<div class="col col-md-4 text-center">
+
+<!-- Dealer buttons animation -->
+<% if move == :dealer %>
+  <div style="padding-bottom: 20px;">
+    <button class="btn btn-success btn-lg" disabled="disabled">
+      <i class="fa fa-refresh fa-spin"></i> Hit
+    </button>&nbsp;
+    <button class="btn btn-warning btn-lg" disabled="disabled">
+      <i class="fa fa-hand-stop-o fa-lg"></i> Stay
+    </button>
+  </div>
+<% end %>
+
+<!-- Game round results -->
+<% if move == :end %>
+  <div class="panel panel-<%=result_color%>">
+    <div class="panel-heading">
+      <h1 class="panel-title grand"><%=result_heading%></h1>
+    </div>
+    <div class="panel-body">
+      <%=result_body%>
+    </div>
+  </div>
+<% end %>
+
+<!-- End of dealer info column -->
+</div> <!-- col -->
+
+<!-- End of dealer part of screen -->
+</div> <!-- row -->
+
+
+<!-- Start player part of screen -->
+<div class="row">
+
+<!-- Player cards -->
+<div class="col col-md-8">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <h1 class="panel-title grand">
+        <%=player%>'s hand: 
+        <span class="label label-<%=
+          case 
+          when player_points == 21 then 'success'
+          when player_points > 21 then 'danger'
+          else 'info'
+          end
+        %>"><%=player_points%></span>
+      </h1>
+    </div>
+    <div class="panel-body">
+      <ul class="cards">
+        <% session[:player_hand].each do |card| %>
+        <li><img src="<%=image(card)%>"></li>
+        <% end %>
+      </ul>      
+    </div>
+  </div>
+</div>
+
+
+<!-- Player panel with bankroll and bet in the heading -->
+<div class="col col-md-4 text-center">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1 class="panel-title grand">
+        Bankroll: <span class="label label-default">$<%=session[:bankroll]%></span>&nbsp; &nbsp; 
+        Bet: <span class="label label-default">$<%=session[:bet]%></span>
+      </h1>
+    </div>
+    <div class="panel-body">
+<!-- End of player panel heading -->
+
+
+<!-- Player hit and stay buttons -->
+<% if move == :player %>
+  <div style="margin-top: 50px;">
+    <a href="/player/hit" class="btn btn-success btn-lg">
+      <i class="fa fa-hand-pointer-o fa-rotate-180 fa-lg"></i> Hit
+    </a>&nbsp;
+    <a href="/dealer" class="btn btn-warning btn-lg">
+      <i class="fa fa-hand-stop-o fa-lg"></i> Stay
+    </a>
+  </div>
+<% end %>
+
+
+<!-- Player play or quit buttons -->
+<% if move == :end %>
+  <div>
+    <div style="margin-top: 50px;">
+      <%=player%>, would you like to play another round?
+      <a href="/bet" class="btn btn-success btn-lg">
+        <i class="fa fa-check fa-lg"></i> Next round
+      </a>&nbsp;
+      <a href="/end_game" class="btn btn-danger btn-lg">
+        <i class="fa fa-close fa-lg"></i> Quit
+      </a>
+    </div>
+  </div>
+<% end %>
+
+
+<!-- Player panel footer -->
+    </div>
+  </div>
+</div>
+
+<!-- End of player part of the screen -->
+</div> <!-- row -->
+
+
+

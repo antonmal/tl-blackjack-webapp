@@ -1,0 +1,48 @@
+body {
+  font-family: 'Droid Serif', serif;
+}
+
+#blackjack {
+  font-family: 'Bangers', cursive;
+  font-size: 1.5em;
+  color: rgb(17,47,96);
+}
+
+.buffer { margin-bottom: 50px; }
+
+.grand {
+  margin: 10px 0px;
+  font-size: 1.5em;
+}
+
+.grand > .label {
+  font-size: 1em;
+}
+
+.cards {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.cards > li > img {
+  float: left;
+  box-shadow: 0 0 10px black;
+  margin: 10px;
+  max-width: 90px;
+}
+
+.col {
+  min-height: 180px;
+}
+
+.panel, .panel-body {
+  min-height: inherit;
+}
+
+.vbottom {
+  vertical-align: bottom;
+}
+
+.

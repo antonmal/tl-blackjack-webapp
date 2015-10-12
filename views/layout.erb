@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>* Blackjack *</title>
+    <link href='https://fonts.googleapis.com/css?family=Bangers|Droid+Serif:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/application.css">
+  </head>
+  <body style="padding-top: 20px;">
+
+<!--     <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+            <ul class="nav">
+              <li><a href="/">Nav Item</a></li>
+            </ul>
+        </div>
+      </div>
+    </div> -->
+
+  <div class="container">
+    <%if @error %>
+      <div class="alert alert-danger" role="alert"><%=@error%></div>
+    <% end %>
+    
+    <%= yield %>
+  
+  </div>
+  </body>
+</html>

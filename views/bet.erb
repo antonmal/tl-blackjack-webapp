@@ -1,0 +1,19 @@
+  <h1>Place a bet</h1>
+
+  <p>Your bankroll: $<%=session[:bankroll]%></p>
+
+  <div class="row">
+    <div class="col-md-4">
+      <form action="/accept_bet" method="post">
+        <div class="form-group">
+          <label for="bet">How much do you want to bet this round?</label>
+          <div class="input-group">
+            <div class="input-group-addon">$</div>
+            <input type="text" class="form-control" name="bet" id="bet" value="50">
+            <div class="input-group-addon">.00</div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success btn-lg">Place it</button>
+      </form>
+    </div>
+  </div>
