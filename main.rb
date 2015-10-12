@@ -5,9 +5,9 @@ require 'sinatra'
 require 'pry'
 require_relative 'blackjack_helpers'
 
-use Rack::Session::Cookie, :key => 'rack.session',
-                           :path => '/',
-                           :secret => 'yachting' 
+use Rack::Session::Cookie, key:     'rack.session',
+                           path:    '/',
+                           secret:  'yachting'
 
 # CONTROLLER
 
@@ -48,7 +48,7 @@ post '/accept_bet' do
 end
 
 get '/player' do
-  erb :game, locals: { :move => :player }
+  erb :game, locals: { move: :player }
 end
 
 get '/player/hit' do
@@ -64,7 +64,7 @@ get '/dealer' do
 end
 
 get '/dealer/show' do
-  erb :game, locals: { :move => :dealer }
+  erb :game, locals: { move: :dealer }
 end
 
 get '/dealer/hit' do
@@ -74,7 +74,7 @@ end
 
 get '/end_round' do
   pay_winnings if session[:round] == :open
-  erb :game, locals: { :move => :end }
+  erb :game, locals: { move: :end }
 end
 
 get '/end_game' do

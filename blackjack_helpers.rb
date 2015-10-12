@@ -5,13 +5,13 @@ helpers do
   def get_ranks
     ranks = {}
     ('2'..'10').each { |num_str| ranks[num_str] = num_str }
-    ranks.merge!({ "J" => "jack", "Q" => "queen", "K" => "king", "A" => "ace" })
+    ranks.merge!('J' => 'jack', 'Q' => 'queen', 'K' => 'king', 'A' => 'ace')
   end
 
   def get_rank_points
     rank_points = {}
     (2..10).each { |num| rank_points[num.to_s] = num }
-    rank_points.merge!({ "J" => 10, "Q" => 10, "K" => 10, "A" => 11 })
+    rank_points.merge!('J' => 10, 'Q' => 10, 'K' => 10, 'A' => 11)
   end
 
   def get_card_points(card)
@@ -19,7 +19,7 @@ helpers do
   end
 
   def get_suits
-    { "♠" => "spades", "♥" => "hearts", "♦" => "diamonds", "♣" => "clubs" }
+    { '♠' => 'spades', '♥' => 'hearts', '♦' => 'diamonds', '♣' => 'clubs' }
   end
 
   def image(card)
@@ -28,10 +28,10 @@ helpers do
 
   def get_points(hand)
     # Calculate the sum of all card values, aces as 11s
-    points = hand.map {|card| get_card_points(card)}.inject(:+)
+    points = hand.map { |card| get_card_points(card) }.inject(:+)
 
-    # If the sum is greater than 21 (busted), re-calculate one or more aces as 1s
-    aces = hand.count {|card| card[0..-2] == "A"}.times do
+    # If the sum is > 21 (busted), re-calculate one or more aces as 1s
+    hand.count { |card| card[0..-2] == 'A' }.times do
       break if points <= 21
       points -= 10
     end
@@ -74,9 +74,7 @@ helpers do
   end
 
   def deal
-    if !session[:deck] || session[:deck].empty?
-      session[:deck] = build_deck
-    end
+    session[:deck] = build_deck if !session[:deck] || session[:deck].empty?
     session[:deck].pop
   end
 
@@ -85,26 +83,26 @@ helpers do
     dealer = dealer_points
 
     if player > 21
-      dealer > 21 ? "tie busted" : "player busted"
+      dealer > 21 ? 'tie busted' : 'player busted'
     elsif dealer > 21
-      player > 21 ? "tie busted" : "dealer busted"
+      player > 21 ? 'tie busted' : 'dealer busted'
     elsif player_blackjack?
-      dealer_blackjack? ? "tie blackjack" : "player blackjack"
+      dealer_blackjack? ? 'tie blackjack' : 'player blackjack'
     elsif dealer_blackjack?
-      player_blackjack? ? "tie blackjack" : "dealer blackjack"
+      player_blackjack? ? 'tie blackjack' : 'dealer blackjack'
     elsif player == dealer
-      "tie points"
+      'tie points'
     else
-      player > dealer ? "player won" : "dealer won"
+      player > dealer ? 'player won' : 'dealer won'
     end
   end
 
   def won?
     case result
-    when 'tie busted', 'tie blackjack', 'tie points'        then "tie"
-    when 'player blackjack'                                 then "blackjack"
-    when 'player won', 'dealer busted'                      then "won"
-    when 'player busted', 'dealer blackjack', 'dealer won'  then "lost"
+    when 'tie busted', 'tie blackjack', 'tie points'        then 'tie'
+    when 'player blackjack'                                 then 'blackjack'
+    when 'player won', 'dealer busted'                      then 'won'
+    when 'player busted', 'dealer blackjack', 'dealer won'  then 'lost'
     end
   end
 
@@ -114,7 +112,7 @@ helpers do
 
   def result_heading
     case won?
-    when 'tie'  then "It's a push."
+    when 'tie'  then 'It\'s a push.'
     when 'lost' then "#{player} lost!!!"
     else "#{player} won!!!"
     end
@@ -122,27 +120,29 @@ helpers do
 
   def result_body
     case result
-    when 'tie busted'       then "Both busted"
-    when 'tie blackjack'    then "Both have blackjack."
-    when 'tie points'       then "Both have equal number of points."
-    when 'player won'       then "You have more points."
-    when 'player blackjack' then "You got blackjack."
-    when 'dealer busted'    then "Dealer busted."
-    when 'player busted'    then "You busted."
-    when 'dealer blackjack' then "Dealer has blackjack."
-    when 'dealer won'       then "Dealer has more points"
+    when 'tie busted'       then 'Both busted'
+    when 'tie blackjack'    then 'Both have blackjack.'
+    when 'tie points'       then 'Both have equal number of points.'
+    when 'player won'       then 'You have more points.'
+    when 'player blackjack' then 'You got blackjack.'
+    when 'dealer busted'    then 'Dealer busted.'
+    when 'player busted'    then 'You busted.'
+    when 'dealer blackjack' then 'Dealer has blackjack.'
+    when 'dealer won'       then 'Dealer has more points'
     end
   end
 
   def result_color
     case won?
-    when 'tie'  then "warning"
-    when 'lost' then "danger"
-    else "success" end
+    when 'tie'  then 'warning'
+    when 'lost' then 'danger'
+    else 'success'
+    end
   end
 
   def reset_hands
-    session[:player_hand], session[:dealer_hand] = [], []
+    session[:player_hand] = []
+    session[:dealer_hand] = []
     2.times do
       session[:player_hand] << deal
       session[:dealer_hand] << deal
@@ -152,7 +152,7 @@ helpers do
   def pay_winnings
     session[:result] =  case won?
                         when 'tie'        then  0
-                        when 'blackjack'  then  session[:bet]*1.5
+                        when 'blackjack'  then  session[:bet] * 1.5
                         when 'won'        then  session[:bet]
                         when 'lost'       then -session[:bet]
                         end
@@ -163,9 +163,12 @@ helpers do
 
   def round_result
     case won?
-    when 'tie'                then "You got your bet back."
-    when 'blackjack', 'won'   then "You won:  " + tagged("$#{session[:result] + session[:bet]}", 'success')
-    else "Your lost:  " + tagged("$#{-session[:result]}", 'danger')
+    when 'tie'
+      'You got your bet back.'
+    when 'blackjack', 'won'
+      'You won:  ' + tagged("$#{session[:result] + session[:bet]}", 'success')
+    else
+      'You lost:  ' + tagged("$#{-session[:result]}", 'danger')
     end
   end
 
@@ -175,12 +178,17 @@ helpers do
 
   def error_message(error)
     messages = {
-      bet_too_large: "Bet cannot be higher than $#{session[:bankroll]} (your bankroll).",
-      empty_name: "Please, enter a name.",
-      bet_negative: "Bet must be greater than zero.",
-      bankrupt: "You lost all you money and cannot bet anymore. All you can do is start over."
+      bet_too_large:
+        %(Bet cannot be higher than $#{session[:bankroll]} (your bankroll).),
+      empty_name:
+        'Please, enter a name.',
+      bet_negative:
+        'Bet must be greater than zero.',
+      bankrupt:
+        %(You lost all you money and cannot bet anymore.
+        I guess, all you can do is start over.)
     }
     messages[error.to_sym] || error
   end
-
+  
 end # helpers
