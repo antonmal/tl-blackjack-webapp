@@ -32,7 +32,7 @@ helpers do
 
     # If the sum is > 21 (busted), re-calculate one or more aces as 1s
     hand.count { |card| card[0..-2] == 'A' }.times do
-      break if points <= 21
+      break if points <= BLACKJACK
       points -= 10
     end
 
@@ -48,19 +48,19 @@ helpers do
   end
 
   def player_blackjack?
-    player_points == 21 && session[:player_hand].size == 2
+    player_points == BLACKJACK && session[:player_hand].size == 2
   end
 
   def player_busted?
-    player_points > 21
+    player_points > BLACKJACK
   end
 
   def dealer_blackjack?
-    dealer_points == 21 && session[:dealer_hand].size == 2
+    dealer_points == BLACKJACK && session[:dealer_hand].size == 2
   end
 
   def dealer_busted?
-    dealer_points > 21
+    dealer_points > BLACKJACK
   end
 
   def build_deck
@@ -82,10 +82,10 @@ helpers do
     player = player_points
     dealer = dealer_points
 
-    if player > 21
-      dealer > 21 ? 'tie busted' : 'player busted'
-    elsif dealer > 21
-      player > 21 ? 'tie busted' : 'dealer busted'
+    if player > BLACKJACK
+      dealer > BLACKJACK ? 'tie busted' : 'player busted'
+    elsif dealer > BLACKJACK
+      player > BLACKJACK ? 'tie busted' : 'dealer busted'
     elsif player_blackjack?
       dealer_blackjack? ? 'tie blackjack' : 'player blackjack'
     elsif dealer_blackjack?
@@ -190,5 +190,5 @@ helpers do
     }
     messages[error.to_sym] || error
   end
-  
+
 end # helpers

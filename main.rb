@@ -9,6 +9,9 @@ use Rack::Session::Cookie, key:     'rack.session',
                            path:    '/',
                            secret:  'yachting'
 
+BLACKJACK = 21
+DEALER_MIN = 17
+
 # CONTROLLER
 
 get '/' do
@@ -54,12 +57,12 @@ end
 get '/player/hit' do
   session[:player_hand] << deal
   redirect '/end_round' if player_busted?
-  redirect '/dealer' if player_points == 21
+  redirect '/dealer' if player_points == BLACKJACK
   redirect '/player'
 end
 
 get '/dealer' do
-  redirect '/dealer/show' if dealer_points < 17
+  redirect '/dealer/show' if dealer_points < DEALER_MIN
   redirect '/end_round'
 end
 
