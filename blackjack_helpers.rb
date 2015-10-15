@@ -112,7 +112,7 @@ helpers do
 
   def result_heading
     case won?
-    when 'tie'  then 'It\'s a push.'
+    when 'tie'  then "It's a push."
     when 'lost' then "#{player} lost!!!"
     else "#{player} won!!!"
     end
@@ -123,10 +123,10 @@ helpers do
     when 'tie busted'       then 'Both busted'
     when 'tie blackjack'    then 'Both have blackjack.'
     when 'tie points'       then 'Both have equal number of points.'
-    when 'player won'       then 'You have more points.'
-    when 'player blackjack' then 'You got blackjack.'
+    when 'player won'       then "#{player} has more points."
+    when 'player blackjack' then "#{player} got blackjack."
     when 'dealer busted'    then 'Dealer busted.'
-    when 'player busted'    then 'You busted.'
+    when 'player busted'    then "#{player} busted."
     when 'dealer blackjack' then 'Dealer has blackjack.'
     when 'dealer won'       then 'Dealer has more points'
     end
@@ -164,11 +164,11 @@ helpers do
   def round_result
     case won?
     when 'tie'
-      'You got your bet back.'
+      "#{player} got the bet back."
     when 'blackjack', 'won'
-      'You won:  ' + tagged("$#{session[:result] + session[:bet]}", 'success')
+      "#{player} won:  " + tagged("$#{session[:result] + session[:bet]}", 'success')
     else
-      'You lost:  ' + tagged("$#{-session[:result]}", 'danger')
+      "#{player} lost:  " + tagged("$#{-session[:result]}", 'danger')
     end
   end
 
