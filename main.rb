@@ -11,7 +11,8 @@ use Rack::Session::Cookie, key:     'rack.session',
 
 BLACKJACK = 21
 DEALER_MIN = 17
-DAFAULT_INITIAL_BANKROLL = 1000
+DEFAULT_BANKROLL = 1000
+DEFAULT_BET = 100
 
 # CONTROLLER
 
@@ -23,12 +24,14 @@ end
 post '/start' do
   redirect '/?error=empty_name' if params[:player_name].empty?
   session[:player_name] = params[:player_name].capitalize
-  session[:bankroll] = params[:bankroll].to_i || DAFAULT_INITIAL_BANKROLL
+  session[:bankroll] = params[:bankroll].to_i || DEFAULT_BANKROLL
+  session[:bet] = nil
   redirect '/bet'
 end
 
 get '/start' do
   session[:deck] = build_deck # reset deck
+  session[:bet] = nil
   redirect '/bet'
 end
 
@@ -57,11 +60,15 @@ get '/player/hit' do
   session[:player_hand] << deal
   redirect '/end_round' if player_busted?
   redirect '/dealer' if player_points == BLACKJACK
+  halt erb(:game, locals: { move: :player }, layout: false) if request.xhr?
   erb :game, locals: { move: :player }
 end
 
 get '/dealer' do
-  halt erb(:game, locals: { move: :dealer }) if dealer_points < DEALER_MIN
+  if dealer_points < DEALER_MIN
+    halt erb(:game, locals: { move: :dealer }, layout: false) if request.xhr?
+    halt erb(:game, locals: { move: :dealer })
+  end
   redirect '/end_round'
 end
 
@@ -72,6 +79,7 @@ end
 
 get '/end_round' do
   pay_winnings if session[:round] == :open
+  halt erb(:game, locals: { move: :end }, layout: false) if request.xhr?
   erb :game, locals: { move: :end }
 end
 

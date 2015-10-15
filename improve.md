@@ -1,7 +1,7 @@
 How to improve the Blackjack app:
 
-3. Increased payouts for pairs, etc.
-3. Splitting and doubling down.
-4. Insurance bets.
-11. Use partials for the 'game' view
-14. Run the code through flog and Rubocop
+1. Increased payouts for pairs, etc.
+2. Splitting and doubling down.
+3. Insurance bets.
+4. Use partials for the 'game' view
+5. Use those partials for AJAX requests to reduce payload
