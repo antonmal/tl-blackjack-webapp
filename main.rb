@@ -20,9 +20,7 @@ get '/' do
 end
 
 post '/start' do
-  unless params[:player_name] && !params[:player_name].empty?
-    redirect '/?error=empty_name'
-  end
+  redirect '/?error=empty_name' if params[:player_name].empty?
   session[:player_name] = params[:player_name].capitalize
   session[:bankroll] = params[:bankroll].to_i || 1000
   redirect '/bet'
@@ -40,9 +38,9 @@ get '/bet' do
 end
 
 post '/accept_bet' do
+  redirect '/bet?error=bet_too_large' if params[:bet].to_i > session[:bankroll]
+  redirect '/bet?error=bet_negative' if params[:bet].to_i <= 0
   session[:bet] = params[:bet].to_i
-  redirect '/bet?error=bet_too_large' if session[:bet] > session[:bankroll]
-  redirect '/bet?error=bet_negative' if session[:bet] <= 0
   session[:bankroll] -= session[:bet]
   session[:round] = :open
   reset_hands
@@ -62,12 +60,8 @@ get '/player/hit' do
 end
 
 get '/dealer' do
-  redirect '/dealer/show' if dealer_points < DEALER_MIN
+  halt erb(:game, locals: { move: :dealer }) if dealer_points < DEALER_MIN
   redirect '/end_round'
-end
-
-get '/dealer/show' do
-  erb :game, locals: { move: :dealer }
 end
 
 get '/dealer/hit' do
