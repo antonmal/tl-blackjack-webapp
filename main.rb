@@ -11,6 +11,7 @@ use Rack::Session::Cookie, key:     'rack.session',
 
 BLACKJACK = 21
 DEALER_MIN = 17
+DAFAULT_INITIAL_BANKROLL = 1000
 
 # CONTROLLER
 
@@ -22,7 +23,7 @@ end
 post '/start' do
   redirect '/?error=empty_name' if params[:player_name].empty?
   session[:player_name] = params[:player_name].capitalize
-  session[:bankroll] = params[:bankroll].to_i || 1000
+  session[:bankroll] = params[:bankroll].to_i || DAFAULT_INITIAL_BANKROLL
   redirect '/bet'
 end
 
@@ -56,7 +57,7 @@ get '/player/hit' do
   session[:player_hand] << deal
   redirect '/end_round' if player_busted?
   redirect '/dealer' if player_points == BLACKJACK
-  redirect '/player'
+  erb :game, locals: { move: :player }
 end
 
 get '/dealer' do

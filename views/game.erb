@@ -1,7 +1,4 @@
-<% if move == :dealer %>
-  <meta http-equiv="refresh" content="1, url=/dealer/hit">
-<% end %>
-
+<div id="game">
 
 <!-- Start dealer part of screen -->
 <div class="row">
@@ -50,7 +47,7 @@
     </div>
     <div class="panel-body">
       <div style="margin-top: 50px;">
-        <button class="btn btn-success btn-lg" disabled="disabled">
+        <button class="btn btn-success btn-lg" disabled="disabled" id="dealer-hit-button">
           <i class="fa fa-refresh fa-spin"></i> Hit
         </button>&nbsp;
         <button class="btn btn-warning btn-lg" disabled="disabled">
@@ -129,10 +126,10 @@
 <!-- Player hit and stay buttons -->
 <% if move == :player %>
   <div style="margin-top: 50px;">
-    <a href="/player/hit" class="btn btn-success btn-lg">
+    <a href="/player/hit" class="btn btn-success btn-lg" id="hit-button">
       <i class="fa fa-hand-pointer-o fa-rotate-180 fa-lg"></i> Hit
     </a>&nbsp;
-    <a href="/dealer" class="btn btn-warning btn-lg">
+    <a href="/dealer" class="btn btn-warning btn-lg" id="stay-button">
       <i class="fa fa-hand-stop-o fa-lg"></i> Stay
     </a>
   </div>
@@ -163,5 +160,5 @@
 <!-- End of player part of the screen -->
 </div> <!-- row -->
 
-
+</div>
 
